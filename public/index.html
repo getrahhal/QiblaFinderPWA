@@ -12,7 +12,33 @@
 </head>
 <body>
     <div id="connectionStatus" class="connection-status">
-        Checking...
+        <div class="connection-pill">Checking...</div>
+        <button id="themeSwitcher" class="theme-switcher">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon">
+            </svg>
+            <span id="themeText">System</span>
+        </button>
+        <div id="themeMenu" class="theme-menu">
+            <button class="theme-option" data-theme="system">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                System
+            </button>
+            <button class="theme-option" data-theme="light">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                Light
+            </button>
+            <button class="theme-option" data-theme="dark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                </svg>
+                Dark
+            </button>
+        </div>
     </div>
     <div class="container">
         <h1 class="header">Qibla Finder</h1>
@@ -23,6 +49,13 @@
                     <img src="./Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-icon" id="kaaba-icon">
                 </div>
                 <div class="status" id="status">Tap the button below to start</div>
+                <div class="coordinates-container" id="coordinates-container" role="button" tabindex="0">
+                    <span class="coordinates-text" id="coordinates-text">--</span>
+                    <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.242a2 2 0 00-.602-1.43L16.083 2.57A2 2 0 0014.685 2H10a2 2 0 00-2 2z" />
+                        <path d="M16 18v2a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2" />
+                    </svg>
+                </div>
                 <div class="distance" id="distance">--</div>
             </div>
         </div>
@@ -38,6 +71,82 @@
 
     <script src="./app.js"></script>
     <script>
+        // Theme management
+        const THEMES = {
+            LIGHT: 'light',
+            DARK: 'dark',
+            SYSTEM: 'system'
+        };
+
+        // Theme icons SVG paths
+        const THEME_ICONS = {
+            system: '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" stroke-linecap="round" stroke-linejoin="round"/>',
+            light: '<circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
+            dark: '<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>'
+        };
+
+        let currentTheme = localStorage.getItem('theme') || THEMES.SYSTEM;
+        
+        // Theme menu handling
+        const themeSwitcher = document.getElementById('themeSwitcher');
+        const themeMenu = document.getElementById('themeMenu');
+        const themeIcon = document.getElementById('themeIcon');
+        
+        // Show/hide menu
+        themeSwitcher.addEventListener('click', (e) => {
+            themeMenu.classList.add('visible');
+            updateActiveTheme();
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!themeSwitcher.contains(e.target) && !themeMenu.contains(e.target)) {
+                themeMenu.classList.remove('visible');
+            }
+        });
+        
+        // Update active theme in menu
+        function updateActiveTheme() {
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.theme === currentTheme);
+            });
+        }
+        
+        // Handle theme selection
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const newTheme = option.dataset.theme;
+                setTheme(newTheme);
+                themeMenu.classList.remove('visible');
+            });
+        });
+
+        function setTheme(theme) {
+            const root = document.documentElement;
+            const themeText = document.getElementById('themeText');
+            themeIcon.innerHTML = THEME_ICONS[theme];
+            
+            // Remove any existing theme classes
+            root.classList.remove('light-theme', 'dark-theme');
+            
+            if (theme === THEMES.SYSTEM) {
+                // Use system preference
+                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                updateTheme(isDark);
+                themeText.textContent = 'System';
+            } else {
+                // Apply specific theme
+                const isDark = theme === THEMES.DARK;
+                root.classList.add(`${theme}-theme`);
+                updateTheme(isDark);
+                themeText.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+            }
+            
+            currentTheme = theme;
+            localStorage.setItem('theme', theme);
+            updateActiveTheme();
+        }
+
         // Function to update theme based on system preference
         function updateTheme(isDark) {
             const kaabaIcon = document.getElementById('kaaba-icon');
@@ -53,11 +162,12 @@
         }
         
         // Watch for system theme changes
-        if (window.matchMedia) {
-            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-            updateTheme(darkModeMediaQuery.matches);
-            darkModeMediaQuery.addListener((e) => updateTheme(e.matches));
-        }
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        darkModeMediaQuery.addListener((e) => {
+            if (currentTheme === THEMES.SYSTEM) {
+                updateTheme(e.matches);
+            }
+        });
 
         // Function to update connectivity status
         function updateOnlineStatus() {
@@ -66,8 +176,9 @@
             
             // Update the status indicator
             const statusElement = document.getElementById('connectionStatus');
-            statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-            statusElement.className = `connection-status ${status}`;
+            const statusPill = statusElement.querySelector('.connection-pill');
+            statusPill.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            statusPill.className = `connection-pill ${status}`;
             
             if (navigator.onLine) {
                 // Reload service worker when we come back online
@@ -90,6 +201,9 @@
                 .then(registration => console.log('ServiceWorker registration successful'))
                 .catch(err => console.log('ServiceWorker registration failed:', err));
         }
+
+        // Initialize theme
+        setTheme(currentTheme);
     </script>
 </body>
 </html>

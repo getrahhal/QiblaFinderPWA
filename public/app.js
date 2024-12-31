@@ -46,7 +46,14 @@ function requestLocationPermission() {
 // Start tracking location
 function startLocationTracking() {
     if ("geolocation" in navigator) {
+        const statusElement = document.getElementById('status');
+        const coordsContainer = document.getElementById('coordinates-container');
+        
+        // Show status and hide coordinates while getting location
         statusElement.textContent = "Getting your location...";
+        statusElement.classList.remove('hidden');
+        coordsContainer.classList.remove('visible');
+        
         navigator.geolocation.watchPosition(updateUI, handleError, {
             enableHighAccuracy: true,
             maximumAge: 0,
@@ -153,10 +160,47 @@ function updateUI(position) {
     targetBearing = calculateBearing(latitude, longitude, KAABA_LAT, KAABA_LNG);
     
     distanceElement.textContent = `${distance.toFixed(2)} km`;
-    statusElement.textContent = `Your coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+    
+    // Format coordinates for display and copying
+    const coordsText = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`;
+    const coordsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    
+    // Update coordinates and show container
+    const coordsContainer = document.getElementById('coordinates-container');
+    const statusElement = document.getElementById('status');
+    
+    document.getElementById('coordinates-text').textContent = coordsText;
+    coordsContainer.dataset.url = coordsUrl;
+    
+    // Hide status and show coordinates
+    statusElement.classList.add('hidden');
+    coordsContainer.classList.add('visible');
     
     updateCompass();
 }
+
+// Handle coordinates copying
+document.getElementById('coordinates-container').addEventListener('click', async function() {
+    const url = this.dataset.url;
+    if (!url) return;
+    
+    try {
+        await navigator.clipboard.writeText(url);
+        const feedback = document.getElementById('copy-feedback');
+        feedback.classList.add('visible');
+        setTimeout(() => feedback.classList.remove('visible'), 2000);
+    } catch (err) {
+        console.error('Failed to copy coordinates:', err);
+    }
+});
+
+// Add keyboard support for accessibility
+document.getElementById('coordinates-container').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+    }
+});
 
 // Check if we already have permissions
 async function checkPermissions() {
