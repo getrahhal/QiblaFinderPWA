@@ -1,0 +1,17 @@
+{
+    "name": "Qibla Finder",
+    "short_name": "Qibla Finder",
+    "description": "Find the direction and distance to the Kaaba in Mecca",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+        {
+            "src": "./Assets/Kaaba-Compass-Icon.svg",
+            "sizes": "834x834",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+} 

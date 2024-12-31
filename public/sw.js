@@ -1,9 +1,10 @@
 const CACHE_NAME = 'kaaba-distance-v1';
 const CACHE_URLS = [
-    '/',
-    '/index.html',
-    '/app.js',
-    '/manifest.json'
+    './',
+    './index.html',
+    './app.js',
+    './manifest.json',
+    './Assets/Kaaba-Compass-Icon.svg'
 ];
 
 // Install event - cache the required files

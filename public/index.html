@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Qibla</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
@@ -152,7 +152,7 @@
         <div class="compass-container">
             <div class="compass">
                 <div class="arrow-container">
-                    <img src="Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-icon">
+                    <img src="./Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-icon">
                 </div>
                 <div class="status" id="status">Tap the button below to start</div>
                 <div class="distance" id="distance">--</div>
@@ -161,10 +161,10 @@
         <button id="startButton" class="button">Start Compass</button>
     </div>
 
-    <script src="app.js"></script>
+    <script src="./app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
+            navigator.serviceWorker.register('./sw.js')
                 .then(registration => console.log('ServiceWorker registration successful'))
                 .catch(err => console.log('ServiceWorker registration failed:', err));
         }
