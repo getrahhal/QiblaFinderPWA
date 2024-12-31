@@ -5,7 +5,10 @@ const CACHE_URLS = [
     './app.js',
     './styles.css',
     './manifest.json',
-    './Assets/Kaaba-Compass-Icon.svg'
+    './Assets/Kaaba-Compass-Icon.svg',
+    './Assets/Kaaba-Compass-dark.svg',
+    './Assets/rahhal-icon-light.png',
+    './Assets/rahhal-icon-dark.png'
 ];
 
 // Install event - cache the required files

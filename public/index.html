@@ -7,6 +7,7 @@
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="color-scheme" content="light dark">
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -19,7 +20,7 @@
         <div class="compass-container">
             <div class="compass">
                 <div class="arrow-container">
-                    <img src="./Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-icon">
+                    <img src="./Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-icon" id="kaaba-icon">
                 </div>
                 <div class="status" id="status">Tap the button below to start</div>
                 <div class="distance" id="distance">--</div>
@@ -28,8 +29,36 @@
         <button id="startButton" class="button">Start Compass</button>
     </div>
 
+    <footer class="footer">
+        <a href="https://github.com/getrahhal" target="_blank" rel="noopener noreferrer" class="footer-link">
+            <img src="./Assets/rahhal-icon-light.png" alt="Rahhal Logo" class="footer-logo" id="rahhal-logo">
+            <p class="footer-text">Part of Rahhal Organization</p>
+        </a>
+    </footer>
+
     <script src="./app.js"></script>
     <script>
+        // Function to update theme based on system preference
+        function updateTheme(isDark) {
+            const kaabaIcon = document.getElementById('kaaba-icon');
+            const rahhalLogo = document.getElementById('rahhal-logo');
+            
+            if (isDark) {
+                kaabaIcon.src = './Assets/Kaaba-Compass-dark.svg';
+                rahhalLogo.src = './Assets/rahhal-icon-dark.png';
+            } else {
+                kaabaIcon.src = './Assets/Kaaba-Compass-Icon.svg';
+                rahhalLogo.src = './Assets/rahhal-icon-light.png';
+            }
+        }
+        
+        // Watch for system theme changes
+        if (window.matchMedia) {
+            const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            updateTheme(darkModeMediaQuery.matches);
+            darkModeMediaQuery.addListener((e) => updateTheme(e.matches));
+        }
+
         // Function to update connectivity status
         function updateOnlineStatus() {
             const status = navigator.onLine ? 'online' : 'offline';
