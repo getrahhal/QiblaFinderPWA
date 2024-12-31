@@ -1,0 +1,23 @@
+{
+  "name": "kaaba-distance-pwa",
+  "version": "1.0.0",
+  "description": "PWA to show distance to Kaaba",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "setup": "chmod +x generate-certificates.sh && ./generate-certificates.sh && npm install",
+    "docker:build": "docker-compose build",
+    "docker:start": "docker-compose up",
+    "docker:start:detach": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v --rmi all"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+} 
