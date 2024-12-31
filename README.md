@@ -86,4 +86,4 @@ npm run docker:stop
 ## Security
 
 The application uses HTTPS with SSL certificates. This is crucial for accessing the device's geolocation features, as modern browsers (especially Safari on iOS devices) require a secure HTTPS connection to request location permissions. For development, self-signed certificates are provided to enable this functionality locally. For production deployment, replace the self-signed certificates with proper SSL certificates from a trusted Certificate Authority.
-# QiblaFinderPWA
+
