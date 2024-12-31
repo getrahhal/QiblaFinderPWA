@@ -3,6 +3,7 @@ const CACHE_URLS = [
     './',
     './index.html',
     './app.js',
+    './styles.css',
     './manifest.json',
     './Assets/Kaaba-Compass-Icon.svg'
 ];

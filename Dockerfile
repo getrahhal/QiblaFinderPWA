@@ -13,7 +13,9 @@ COPY package*.json ./
 RUN npm install
 
 # Copy application files
-COPY . .
+COPY public ./public
+COPY generate-certificates.sh ./
+COPY server.js ./
 
 # Generate SSL certificates
 RUN chmod +x generate-certificates.sh && ./generate-certificates.sh

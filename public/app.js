@@ -158,7 +158,57 @@ function updateUI(position) {
     updateCompass();
 }
 
-// Initialize app when start button is clicked
+// Check if we already have permissions
+async function checkPermissions() {
+    let hasOrientation = false;
+    let hasLocation = false;
+
+    // Check orientation permission
+    if (typeof DeviceOrientationEvent !== 'undefined' && 
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS requires explicit permission check
+        try {
+            const permission = await DeviceOrientationEvent.requestPermission();
+            hasOrientation = permission === 'granted';
+        } catch (error) {
+            hasOrientation = false;
+        }
+    } else {
+        // Non-iOS devices don't need explicit permission
+        hasOrientation = true;
+    }
+
+    // Check location permission
+    if ("permissions" in navigator) {
+        try {
+            const permission = await navigator.permissions.query({ name: 'geolocation' });
+            hasLocation = permission.state === 'granted';
+        } catch (error) {
+            hasLocation = false;
+        }
+    }
+
+    return { hasOrientation, hasLocation };
+}
+
+// Initialize app
+async function initializeApp() {
+    const { hasOrientation, hasLocation } = await checkPermissions();
+
+    if (hasOrientation && hasLocation) {
+        // If we already have both permissions, start automatically
+        startButton.style.display = 'none';
+        window.addEventListener('deviceorientation', handleOrientation, true);
+        startLocationTracking();
+    } else {
+        // Show button if we need permissions
+        startButton.disabled = false;
+        startButton.style.display = 'block';
+        statusElement.textContent = 'Tap the button below to start';
+    }
+}
+
+// Modify startApp function
 async function startApp() {
     startButton.disabled = true;
     startButton.textContent = 'Starting...';
@@ -178,7 +228,7 @@ async function startApp() {
         window.addEventListener('deviceorientation', handleOrientation, true);
         startLocationTracking();
         
-        // Hide the button since we don't need it anymore
+        // Hide the button
         startButton.style.display = 'none';
     } catch (error) {
         console.error('Error starting app:', error);
@@ -188,10 +238,10 @@ async function startApp() {
     }
 }
 
-// Add click handler to start button
-startButton.addEventListener('click', startApp);
-
-// Initialize button state
+// Modify the DOMContentLoaded event
 document.addEventListener('DOMContentLoaded', () => {
-    startButton.disabled = false;
+    initializeApp();
 });
+
+// Keep the click handler for the button
+startButton.addEventListener('click', startApp);
