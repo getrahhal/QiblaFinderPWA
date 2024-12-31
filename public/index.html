@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+    <div id="connectionStatus" class="connection-status">
+        Checking...
+    </div>
     <div class="container">
         <h1 class="header">Qibla Finder</h1>
         
@@ -27,6 +30,32 @@
 
     <script src="./app.js"></script>
     <script>
+        // Function to update connectivity status
+        function updateOnlineStatus() {
+            const status = navigator.onLine ? 'online' : 'offline';
+            console.log('App is', status);
+            
+            // Update the status indicator
+            const statusElement = document.getElementById('connectionStatus');
+            statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            statusElement.className = `connection-status ${status}`;
+            
+            if (navigator.onLine) {
+                // Reload service worker when we come back online
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.ready.then(registration => {
+                        registration.update();
+                    });
+                }
+            }
+        }
+
+        // Listen for online/offline events
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        // Initialize status on load
+        updateOnlineStatus();
+
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js')
                 .then(registration => console.log('ServiceWorker registration successful'))
