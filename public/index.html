@@ -98,12 +98,26 @@
         <footer class="app-footer">
             <a href="https://github.com/getrahhal" target="_blank" rel="noopener noreferrer" class="footer-content">
                 <img src="./Assets/rahhal-icon-light.png" alt="Rahhal Logo" class="footer-logo" id="rahhal-logo">
-                <span class="footer-text">Part of Rahhal Mini Apps.</span>
+                <span class="footer-text">Part of Rahhal's Mini Apps.</span>
             </a>
         </footer>
     </div>
 
     <script src="./app.js"></script>
     <script src="./theme-manager.js"></script>
+    <!-- Add Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

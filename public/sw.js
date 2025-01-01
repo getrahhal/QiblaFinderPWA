@@ -1,16 +1,18 @@
 const CACHE_NAME = 'qibla-finder-v1';
 const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
-    './modern-styles.css',
-    './app.js',
-    './theme-manager.js',
-    './manifest.json',
-    './Assets/Kaaba-Compass-Icon.svg',
-    './Assets/Kaaba-Compass-dark.svg',
-    './Assets/rahhal-icon-light.png',
-    './Assets/rahhal-icon-dark.png',
-    './Assets/favicon.ico'
+    '/',
+    '/index.html',
+    '/styles.css',
+    '/app.js',
+    '/theme-manager.js',
+    '/sw.js',
+    '/manifest.json',
+    '/Assets/Kaaba-Compass-Icon.svg',
+    '/Assets/Kaaba-Compass-dark.svg',
+    '/Assets/rahhal-icon-light.png',
+    '/Assets/rahhal-icon-dark.png',
+    '/Assets/favicon.ico',
+    'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap'
 ];
 
 // Install Service Worker
@@ -52,42 +54,39 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch Event - Cache First, then Network
+// Fetch Event - Network First with Cache Fallback
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                // Return cached version if found
-                if (response) {
-                    return response;
+        // Try network first
+        fetch(event.request)
+            .then(response => {
+                // Check if we received a valid response
+                if (!response || response.status !== 200) {
+                    throw new Error('Network response was not valid');
                 }
 
-                // Clone the request
-                const fetchRequest = event.request.clone();
+                // Clone the response because it can only be consumed once
+                const responseToCache = response.clone();
 
-                // Make network request and cache the response
-                return fetch(fetchRequest)
-                    .then((response) => {
-                        // Check if we received a valid response
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
+                // Add the response to cache for future offline use
+                caches.open(CACHE_NAME)
+                    .then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+
+                return response;
+            })
+            .catch(error => {
+                console.log('Network request failed, falling back to cache:', error);
+                
+                // Network failed, try cache
+                return caches.match(event.request)
+                    .then(cachedResponse => {
+                        if (cachedResponse) {
+                            return cachedResponse;
                         }
-
-                        // Clone the response
-                        const responseToCache = response.clone();
-
-                        // Add the response to cache
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
-
-                        return response;
-                    })
-                    .catch((error) => {
-                        // If both cache and network fail, return offline page
-                        console.log('Fetch failed; returning offline content instead.', error);
-                        return caches.match('./index.html');
+                        // If nothing in cache, return offline page
+                        return caches.match('/index.html');
                     });
             })
     );
