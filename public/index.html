@@ -3,209 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Qibla</title>
+    <title>Qibla | القبلة</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <div id="connectionStatus" class="connection-status">
-        <div class="connection-pill">Checking...</div>
-        <button id="themeSwitcher" class="theme-switcher">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon">
-            </svg>
-            <span id="themeText">System</span>
-        </button>
-        <div id="themeMenu" class="theme-menu">
-            <button class="theme-option" data-theme="system">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                System
-            </button>
-            <button class="theme-option" data-theme="light">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="5"/>
-                    <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-                Light
-            </button>
-            <button class="theme-option" data-theme="dark">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                </svg>
-                Dark
+    <div class="app-container">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span class="status-text">Connected</span>
+            </div>
+            <button class="theme-button" id="themeSwitcher">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon"></svg>
             </button>
         </div>
-    </div>
-    <div class="container">
-        <div class="qibla-card">
-            <h1 class="header">Qibla Finder</h1>
-            
-            <div class="compass-container">
-                <div class="compass">
-                    <div class="arrow-container">
-                        <img src="./Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-icon" id="kaaba-icon">
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="compass-card">
+                <div class="compass-header">
+                    <h1>Qibla Finder</h1>
+                    <p class="subtitle">Find the direction to Mecca</p>
+                </div>
+
+                <div class="compass-wrapper">
+                    <div class="compass-ring">
+                        <div class="compass-face">
+                            <img src="./Assets/Kaaba-Compass-Icon.svg" alt="Kaaba Direction" class="kaaba-indicator" id="kaaba-icon">
+                        </div>
+                    </div>
+                    
+                    <div class="compass-info">
+                        <div class="info-card" id="coordinates-container">
+                            <span class="info-label">Location</span>
+                            <span class="info-value" id="coordinates-text">--</span>
+                            <button class="copy-button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.242a2 2 0 00-.602-1.43L16.083 2.57A2 2 0 0014.685 2H10a2 2 0 00-2 2z" />
+                                    <path d="M16 18v2a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="info-card">
+                            <span class="info-label">Distance to Kaaba</span>
+                            <span class="info-value" id="distance">--</span>
+                        </div>
                     </div>
                 </div>
-                <div class="status" id="status">Tap the button below to start</div>
-                <div class="coordinates-container" id="coordinates-container" role="button" tabindex="0">
-                    <span class="coordinates-text" id="coordinates-text">--</span>
-                    <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.242a2 2 0 00-.602-1.43L16.083 2.57A2 2 0 0014.685 2H10a2 2 0 00-2 2z" />
-                        <path d="M16 18v2a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2" />
-                    </svg>
+
+                <div class="status-message" id="status">
+                    <span class="message-text">Tap start to begin</span>
                 </div>
-                <div class="distance" id="distance">--</div>
+
+                <button class="primary-button" id="startButton">
+                    <span class="button-text">Start Compass</span>
+                </button>
             </div>
-            <button id="startButton" class="button">Start Compass</button>
+        </main>
+
+        <!-- Theme Menu -->
+        <div class="theme-menu" id="themeMenu">
+            <div class="theme-menu-content">
+                <button class="theme-option" data-theme="system">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>System</span>
+                </button>
+                <button class="theme-option" data-theme="light">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"/>
+                        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                    </svg>
+                    <span>Light</span>
+                </button>
+                <button class="theme-option" data-theme="dark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                    <span>Dark</span>
+                </button>
+            </div>
         </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <a href="https://github.com/getrahhal" target="_blank" rel="noopener noreferrer" class="footer-content">
+                <img src="./Assets/rahhal-icon-light.png" alt="Rahhal Logo" class="footer-logo" id="rahhal-logo">
+                <span class="footer-text">Part of Rahhal Mini Apps.</span>
+            </a>
+        </footer>
     </div>
 
-    <footer class="footer">
-        <a href="https://github.com/getrahhal" target="_blank" rel="noopener noreferrer" class="footer-link">
-            <img src="./Assets/rahhal-icon-light.png" alt="Rahhal Logo" class="footer-logo" id="rahhal-logo">
-            <p class="footer-text">Part of Rahhal Organization</p>
-        </a>
-    </footer>
-
     <script src="./app.js"></script>
-    <script>
-        // Theme management
-        const THEMES = {
-            LIGHT: 'light',
-            DARK: 'dark',
-            SYSTEM: 'system'
-        };
-
-        // Theme icons SVG paths
-        const THEME_ICONS = {
-            system: '<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707" stroke-linecap="round" stroke-linejoin="round"/>',
-            light: '<circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
-            dark: '<path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>'
-        };
-
-        let currentTheme = localStorage.getItem('theme') || THEMES.SYSTEM;
-        
-        // Theme menu handling
-        const themeSwitcher = document.getElementById('themeSwitcher');
-        const themeMenu = document.getElementById('themeMenu');
-        const themeIcon = document.getElementById('themeIcon');
-        
-        // Show/hide menu
-        themeSwitcher.addEventListener('click', (e) => {
-            themeMenu.classList.add('visible');
-            updateActiveTheme();
-        });
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!themeSwitcher.contains(e.target) && !themeMenu.contains(e.target)) {
-                themeMenu.classList.remove('visible');
-            }
-        });
-        
-        // Update active theme in menu
-        function updateActiveTheme() {
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.classList.toggle('active', option.dataset.theme === currentTheme);
-            });
-        }
-        
-        // Handle theme selection
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.addEventListener('click', () => {
-                const newTheme = option.dataset.theme;
-                setTheme(newTheme);
-                themeMenu.classList.remove('visible');
-            });
-        });
-
-        function setTheme(theme) {
-            const root = document.documentElement;
-            const themeText = document.getElementById('themeText');
-            themeIcon.innerHTML = THEME_ICONS[theme];
-            
-            // Remove any existing theme classes
-            root.classList.remove('light-theme', 'dark-theme');
-            
-            if (theme === THEMES.SYSTEM) {
-                // Use system preference
-                const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                updateTheme(isDark);
-                themeText.textContent = 'System';
-            } else {
-                // Apply specific theme
-                const isDark = theme === THEMES.DARK;
-                root.classList.add(`${theme}-theme`);
-                updateTheme(isDark);
-                themeText.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
-            }
-            
-            currentTheme = theme;
-            localStorage.setItem('theme', theme);
-            updateActiveTheme();
-        }
-
-        // Function to update theme based on system preference
-        function updateTheme(isDark) {
-            const kaabaIcon = document.getElementById('kaaba-icon');
-            const rahhalLogo = document.getElementById('rahhal-logo');
-            
-            if (isDark) {
-                kaabaIcon.src = './Assets/Kaaba-Compass-dark.svg';
-                rahhalLogo.src = './Assets/rahhal-icon-dark.png';
-            } else {
-                kaabaIcon.src = './Assets/Kaaba-Compass-Icon.svg';
-                rahhalLogo.src = './Assets/rahhal-icon-light.png';
-            }
-        }
-        
-        // Watch for system theme changes
-        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        darkModeMediaQuery.addListener((e) => {
-            if (currentTheme === THEMES.SYSTEM) {
-                updateTheme(e.matches);
-            }
-        });
-
-        // Function to update connectivity status
-        function updateOnlineStatus() {
-            const status = navigator.onLine ? 'online' : 'offline';
-            console.log('App is', status);
-            
-            // Update the status indicator
-            const statusElement = document.getElementById('connectionStatus');
-            const statusPill = statusElement.querySelector('.connection-pill');
-            statusPill.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-            statusPill.className = `connection-pill ${status}`;
-            
-            if (navigator.onLine) {
-                // Reload service worker when we come back online
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(registration => {
-                        registration.update();
-                    });
-                }
-            }
-        }
-
-        // Listen for online/offline events
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        // Initialize status on load
-        updateOnlineStatus();
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => console.log('ServiceWorker registration successful'))
-                .catch(err => console.log('ServiceWorker registration failed:', err));
-        }
-
-        // Initialize theme
-        setTheme(currentTheme);
-    </script>
+    <script src="./theme-manager.js"></script>
 </body>
 </html>
